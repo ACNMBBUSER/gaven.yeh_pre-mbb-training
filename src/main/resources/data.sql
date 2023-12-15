@@ -8,3 +8,5 @@
 
 INSERT INTO Profiles (username, name, age, email)
 VALUES ('gaven.yeh', 'Gaven Yeh', 20, 'gaven.yeh@accenture.com');
+INSERT INTO Profiles (username, name, age, email)
+VALUES ('testuser', 'Test User', 22, 'test@test.com');
