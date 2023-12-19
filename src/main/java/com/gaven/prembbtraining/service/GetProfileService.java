@@ -1,5 +1,6 @@
 package com.gaven.prembbtraining.service;
 
+import com.gaven.prembbtraining.model.exception.NoSuchUsernameException;
 import com.gaven.prembbtraining.model.request.GetProfileRequest;
 import com.gaven.prembbtraining.model.response.GetProfileResponse;
 import com.gaven.prembbtraining.repository.ProfileRepository;
@@ -16,7 +17,6 @@ public class GetProfileService {
     ProfileRepository profileRepository;
 
     @Autowired
-
     public GetProfileService(ProfileRepository profileRepository) {
         this.profileRepository = profileRepository;
     }
@@ -24,7 +24,8 @@ public class GetProfileService {
     public GetProfileResponse execute(GetProfileRequest request) {
         var profileEntity = profileRepository.findById(request.getUsername());
         return GetProfileResponse.builder()
-                .profile(profileEntity.get())
+//                .profile(profileEntity.get())
+                .profile(profileEntity.orElseThrow(NoSuchUsernameException::new))
                 .build();
     }
 }
