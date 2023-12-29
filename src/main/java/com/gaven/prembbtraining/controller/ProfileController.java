@@ -7,6 +7,8 @@ import com.gaven.prembbtraining.model.response.GetProfilesResponse;
 import com.gaven.prembbtraining.service.GetProfileService;
 import com.gaven.prembbtraining.service.GetProfilesService;
 import com.gaven.prembbtraining.service.PostProfileService;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,21 +21,21 @@ public class ProfileController {
     private final GetProfilesService getProfilesService;
     private final PostProfileService postProfileService;
 
-    @GetMapping("/v1/profile/")
+    @GetMapping("/v1/profile")
     public GetProfilesResponse getProfiles() {
         return getProfilesService.execute();
     }
 
-    @GetMapping("/v1/profile/{username}/")
-    public GetProfileResponse getProfile(@PathVariable String username) {
+    @GetMapping("/v1/profile/{username}")
+    public GetProfileResponse getProfile(@PathVariable @Parameter(name = "username", description = "Username", example = "testusername") String username) {
         var request = GetProfileRequest.builder()
                 .username(username).build();
         return getProfileService.execute(request);
     }
 
-    @PostMapping("/v1/profile/")
+    @PostMapping("/v1/profile")
     @ResponseStatus(HttpStatus.CREATED)
-    public void postProfile(@RequestBody PostProfileRequest request) {
+    public void postProfile(@RequestBody @Valid PostProfileRequest request) {
         postProfileService.execute(request);
     }
 }

@@ -25,7 +25,7 @@ public class GetProfileService {
         var profileEntity = profileRepository.findById(request.getUsername());
         return GetProfileResponse.builder()
 //                .profile(profileEntity.get())
-                .profile(profileEntity.orElseThrow(NoSuchUsernameException::new))
+                .profile(profileEntity.orElseThrow(() -> new NoSuchUsernameException("Profile not found with username: " + request.getUsername())))
                 .build();
     }
 }
