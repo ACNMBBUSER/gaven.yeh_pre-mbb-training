@@ -21,11 +21,13 @@ public class ProfileController {
     private final GetProfilesService getProfilesService;
     private final PostProfileService postProfileService;
 
+    @CrossOrigin
     @GetMapping("/v1/profile")
     public GetProfilesResponse getProfiles() {
         return getProfilesService.execute();
     }
 
+    @CrossOrigin
     @GetMapping("/v1/profile/{username}")
     public GetProfileResponse getProfile(@PathVariable @Parameter(name = "username", description = "Username", example = "testusername") String username) {
         var request = GetProfileRequest.builder()
@@ -33,6 +35,7 @@ public class ProfileController {
         return getProfileService.execute(request);
     }
 
+    @CrossOrigin
     @PostMapping("/v1/profile")
     @ResponseStatus(HttpStatus.CREATED)
     public void postProfile(@RequestBody @Valid PostProfileRequest request) {
