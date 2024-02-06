@@ -62,7 +62,7 @@ public class ProfileControllerTest {
         Mockito.when(mockGetProfilesService.execute()).thenReturn(mockServiceResponse);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/v1/profile/")
+                        .get("/v1/profile")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -86,7 +86,7 @@ public class ProfileControllerTest {
         Mockito.when(mockGetProfileService.execute(any(GetProfileRequest.class))).thenReturn(mockServiceResponse);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/v1/profile/" + "testUsername/")
+                        .get("/v1/profile/" + "testUsername")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class ProfileControllerTest {
         Mockito.when(mockGetProfileService.execute(any(GetProfileRequest.class))).thenThrow(NoSuchUsernameException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/v1/profile/" + "testUsername/")
+                        .get("/v1/profile/" + "testUsername")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
@@ -121,7 +121,7 @@ public class ProfileControllerTest {
         Mockito.doNothing().when(mockPostProfileService).execute(any(PostProfileRequest.class));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/v1/profile/")
+                        .post("/v1/profile")
                         .content(asJsonString(mockRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
