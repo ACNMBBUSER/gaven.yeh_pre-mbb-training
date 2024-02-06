@@ -26,7 +26,7 @@ public class GetProfileServiceTest {
     GetProfileService getProfileService;
 
     @Test
-    public void whenReceivePostRequest_thenSavetoDB() {
+    public void whenReceiveGetRequest_thenReturnProfile() {
         // Mock request
         var mockRequest = GetProfileRequest.builder()
                 .username("testUsername")

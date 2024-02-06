@@ -1,12 +1,12 @@
 package com.gaven.prembbtraining.controller;
 
+import com.gaven.prembbtraining.model.request.DeleteProfileRequest;
 import com.gaven.prembbtraining.model.request.GetProfileRequest;
 import com.gaven.prembbtraining.model.request.PostProfileRequest;
+import com.gaven.prembbtraining.model.request.PutProfileRequest;
 import com.gaven.prembbtraining.model.response.GetProfileResponse;
 import com.gaven.prembbtraining.model.response.GetProfilesResponse;
-import com.gaven.prembbtraining.service.GetProfileService;
-import com.gaven.prembbtraining.service.GetProfilesService;
-import com.gaven.prembbtraining.service.PostProfileService;
+import com.gaven.prembbtraining.service.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,8 @@ public class ProfileController {
     private final GetProfileService getProfileService;
     private final GetProfilesService getProfilesService;
     private final PostProfileService postProfileService;
+    private final PutProfileService putProfileService;
+    private final DeleteProfileService deleteProfileService;
 
     @CrossOrigin
     @GetMapping("/v1/profile")
@@ -40,5 +42,22 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postProfile(@RequestBody @Valid PostProfileRequest request) {
         postProfileService.execute(request);
+    }
+
+    @CrossOrigin
+    @PutMapping("/v1/profile")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void putProfile(@RequestBody @Valid PutProfileRequest request) {
+        putProfileService.execute(request);
+    }
+
+
+    @CrossOrigin
+    @DeleteMapping("/v1/profile/{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProfile(@PathVariable @Parameter(name = "username", description = "Username", example = "testusername") String username) {
+        var request = DeleteProfileRequest.builder()
+                .username(username).build();
+        deleteProfileService.execute(request);
     }
 }

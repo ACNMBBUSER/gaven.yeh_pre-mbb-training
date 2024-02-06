@@ -3,13 +3,13 @@ package com.gaven.prembbtraining.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gaven.prembbtraining.model.entity.ProfileEntity;
 import com.gaven.prembbtraining.model.exception.NoSuchUsernameException;
+import com.gaven.prembbtraining.model.request.DeleteProfileRequest;
 import com.gaven.prembbtraining.model.request.GetProfileRequest;
 import com.gaven.prembbtraining.model.request.PostProfileRequest;
+import com.gaven.prembbtraining.model.request.PutProfileRequest;
 import com.gaven.prembbtraining.model.response.GetProfileResponse;
 import com.gaven.prembbtraining.model.response.GetProfilesResponse;
-import com.gaven.prembbtraining.service.GetProfileService;
-import com.gaven.prembbtraining.service.GetProfilesService;
-import com.gaven.prembbtraining.service.PostProfileService;
+import com.gaven.prembbtraining.service.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,10 @@ public class ProfileControllerTest {
     GetProfilesService mockGetProfilesService;
     @MockBean
     PostProfileService mockPostProfileService;
+    @MockBean
+    PutProfileService mockPutProfileService;
+    @MockBean
+    DeleteProfileService mockDeleteProfileService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -126,6 +130,63 @@ public class ProfileControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    public void putProfileAPI() throws Exception {
+        var mockRequest = PutProfileRequest.builder()
+                .profile(
+                        ProfileEntity.builder()
+                                .username("testUsername")
+                                .age(1)
+                                .email("test@test.com")
+                                .name("testName")
+                                .build())
+                .build();
+
+        Mockito.doNothing().when(mockPutProfileService).execute(any(PutProfileRequest.class));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/v1/profile")
+                        .content(asJsonString(mockRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @Test
+    public void putProfileAPI_404() throws Exception {
+        Mockito.doThrow(NoSuchUsernameException.class).when(mockPutProfileService).execute(any(PutProfileRequest.class));
+        var mockRequest = PutProfileRequest.builder()
+                .profile(
+                        ProfileEntity.builder()
+                                .username("testUsername")
+                                .age(1)
+                                .email("test@test.com")
+                                .name("testName")
+                                .build())
+                .build();
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/v1/profile")
+                        .content(asJsonString(mockRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No such Username"));
+    }
+
+    @Test
+    public void deleteProfileAPI() throws Exception {
+
+        Mockito.doNothing().when(mockDeleteProfileService).execute(any(DeleteProfileRequest.class));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/v1/profile/" + "testUsername")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$").doesNotExist());
     }
 
