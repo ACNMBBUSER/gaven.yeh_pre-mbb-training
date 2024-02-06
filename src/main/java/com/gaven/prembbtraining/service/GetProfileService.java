@@ -6,7 +6,6 @@ import com.gaven.prembbtraining.model.response.GetProfileResponse;
 import com.gaven.prembbtraining.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,12 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class GetProfileService {
 
-    ProfileRepository profileRepository;
-
-    @Autowired
-    public GetProfileService(ProfileRepository profileRepository) {
-        this.profileRepository = profileRepository;
-    }
+    private final ProfileRepository profileRepository;
 
     public GetProfileResponse execute(GetProfileRequest request) {
         var profileEntity = profileRepository.findById(request.getUsername());
